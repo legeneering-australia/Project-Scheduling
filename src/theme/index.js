@@ -1,17 +1,13 @@
 import { createMuiTheme } from '@material-ui/core';
-
 import palette from './palette';
 import typography from './typography';
 import overrides from './overrides';
 
-const theme = createMuiTheme({
+const baseTheme = {
   palette,
   typography,
-  overrides,
-  zIndex: {
-    appBar: 1200,
-    drawer: 1100
-  }
-});
+  overrides
+};
 
-export default theme;
+export const theme = createMuiTheme(baseTheme);
+export const themeWithRtl = createMuiTheme({ ...baseTheme, direction: 'rtl' });
