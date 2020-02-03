@@ -69,7 +69,8 @@ mock.onGet('/api/projects').reply(200, {
       ],
       start_date: moment(),
       end_date: moment(),
-      updated_at: moment().subtract(16, 'hour')
+      updated_at: moment().subtract(16, 'hour'),
+      status: 'In Progress'
     },
     {
       id: uuid(),
@@ -91,7 +92,8 @@ mock.onGet('/api/projects').reply(200, {
       ],
       start_date: moment(),
       end_date: moment(),
-      updated_at: moment().subtract(3, 'days')
+      updated_at: moment().subtract(3, 'days'),
+      status: 'Completed'
     },
     {
       id: uuid(),
@@ -117,7 +119,8 @@ mock.onGet('/api/projects').reply(200, {
       ],
       start_date: moment(),
       end_date: moment(),
-      updated_at: moment().subtract(7, 'days')
+      updated_at: moment().subtract(7, 'days'),
+      status: 'Overdue'
     },
     {
       id: uuid(),
@@ -137,7 +140,7 @@ mock.onGet('/api/projects').reply(200, {
           color: colors.green[600]
         }
       ],
-      start_date: moment(),
+      start_date: moment().subtract(8, 'days'),
       end_date: moment(),
       updated_at: moment().subtract(8, 'days')
     }

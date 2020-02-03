@@ -9,7 +9,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { theme, themeWithRtl } from './theme';
 import { configureStore } from './store';
-import routes from './routes';
+import routes from './Routes';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import CookiesNotification from './components/CookiesNotification';
 import ScrollReset from './components/ScrollReset';

@@ -8,7 +8,6 @@ import DashboardLayout from './layouts/Dashboard';
 import DashboardAnalyticsView from './views/DashboardAnalytics';
 import DashboardDefaultView from './views/DashboardDefault';
 import OverviewView from './views/Overview';
-import PresentationView from './views/Presentation';
 
 export default [
   {
@@ -24,11 +23,6 @@ export default [
         path: '/auth/login',
         exact: true,
         component: lazy(() => import('src/views/Login'))
-      },
-      {
-        path: '/auth/register',
-        exact: true,
-        component: lazy(() => import('src/views/Register'))
       },
       {
         component: () => <Redirect to="/errors/error-404" />
@@ -60,7 +54,7 @@ export default [
     ]
   },
   {
-    route: '/campaigns',
+    route: '*',
     component: DashboardLayout,
     routes: [
       {
@@ -84,15 +78,6 @@ export default [
         component: OverviewView
       },
       {
-        component: () => <Redirect to="/errors/error-404" />
-      }
-    ]
-  },
-  {
-    route: '/projects',
-    component: DashboardLayout,
-    routes: [
-      {
         path: '/projects',
         exact: true,
         component: lazy(() => import('src/views/Projects/ProjectManagementList'))
@@ -112,15 +97,6 @@ export default [
         exact: true,
         component: OverviewView
       },
-      {
-        component: () => <Redirect to="/errors/error-404" />
-      }
-    ]
-  },
-  {
-    route: '*',
-    component: DashboardLayout,
-    routes: [
       {
         path: '/dashboards/analytics',
         exact: true,

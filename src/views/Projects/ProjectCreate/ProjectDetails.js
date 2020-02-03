@@ -17,7 +17,7 @@ function ProjectDetails({ className, ...rest }) {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardHeader title="Project details" />
+      <CardHeader title="Project Description" />
       <CardContent>
         <RichEditor placeholder="Say something about the product..." />
       </CardContent>

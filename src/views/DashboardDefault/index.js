@@ -71,14 +71,7 @@ function DashboardDefault() {
           </Grid>
           <Grid
             item
-            lg={3}
-            xs={12}
-          >
-            <RealTime />
-          </Grid>
-          <Grid
-            item
-            lg={9}
+            lg={12}
             xs={12}
           >
             <PerformanceOverTime />

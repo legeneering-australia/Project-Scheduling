@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none'
   },
   logo: {
-    maxWidth: 250
+    maxWidth: 200
   }
 }));
 

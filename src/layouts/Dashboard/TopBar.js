@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1)
   },
   logo: {
-    maxWidth: 250
+    maxWidth: 200
   }
 }));
 

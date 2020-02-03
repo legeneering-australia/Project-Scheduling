@@ -66,9 +66,10 @@ function ProjectCard({ project, className, ...rest }) {
   const classes = useStyles();
 
   const statusColors = {
-    'In progress': colors.orange[600],
-    Canceled: colors.grey[600],
-    Completed: colors.green[600]
+    'In Progress': colors.orange[600],
+    Cancelled: colors.grey[600],
+    Completed: colors.green[600],
+    Overdue: colors.red[600]
   };
 
   return (
@@ -78,13 +79,6 @@ function ProjectCard({ project, className, ...rest }) {
     >
       <CardContent className={classes.content}>
         <div className={classes.header}>
-          <Avatar
-            alt="Author"
-            className={classes.avatar}
-            src={project.author.avatar}
-          >
-            {getInitials(project.author.name)}
-          </Avatar>
           <div>
             <Link
               color="textPrimary"
@@ -95,18 +89,6 @@ function ProjectCard({ project, className, ...rest }) {
             >
               {project.title}
             </Link>
-            <Typography variant="body2">
-              by
-              {' '}
-              <Link
-                color="textPrimary"
-                component={RouterLink}
-                to="/management/customers/1"
-                variant="h6"
-              >
-                {project.author.name}
-              </Link>
-            </Typography>
           </div>
         </div>
         <div className={classes.stats}>
@@ -114,23 +96,19 @@ function ProjectCard({ project, className, ...rest }) {
             {project.currency}
             {project.price}
           </Typography>
-          <Typography variant="body2">Project price</Typography>
-        </div>
-        <div className={classes.stats}>
-          <Typography variant="h6">{project.members}</Typography>
-          <Typography variant="body2">Team members</Typography>
+          <Typography variant="body2">Project Value</Typography>
         </div>
         <div className={classes.stats}>
           <Typography variant="h6">
             {moment(project.start_date).format('DD MMMM YYYY')}
           </Typography>
-          <Typography variant="body2">Project started</Typography>
+          <Typography variant="body2">Project Start</Typography>
         </div>
         <div className={classes.stats}>
           <Typography variant="h6">
             {moment(project.end_date).format('DD MMMM YYYY')}
           </Typography>
-          <Typography variant="body2">Project deadline</Typography>
+          <Typography variant="body2">Project Deadline</Typography>
         </div>
         <div className={classes.stats}>
           <Typography
@@ -139,7 +117,7 @@ function ProjectCard({ project, className, ...rest }) {
           >
             {project.status}
           </Typography>
-          <Typography variant="body2">Project status</Typography>
+          <Typography variant="body2">Project Status</Typography>
         </div>
         <div className={classes.actions}>
           <Button

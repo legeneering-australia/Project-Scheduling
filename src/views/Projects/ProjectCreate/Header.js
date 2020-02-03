@@ -17,17 +17,10 @@ function Header({ className, ...rest }) {
       className={clsx(classes.root, className)}
     >
       <Typography
-        component="h2"
-        gutterBottom
-        variant="overline"
-      >
-        New Project
-      </Typography>
-      <Typography
         component="h1"
         variant="h3"
       >
-        Apply for listing project
+        New Project
       </Typography>
     </div>
   );

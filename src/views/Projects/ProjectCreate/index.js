@@ -44,11 +44,8 @@ function ProjectCreate() {
     >
       <Container maxWidth="lg">
         <Header />
-        <AboutAuthor className={classes.aboutAuthor} />
         <AboutProject className={classes.aboutProject} />
-        <ProjectCover className={classes.projectCover} />
         <ProjectDetails className={classes.projectDetails} />
-        <Preferences className={classes.preferences} />
         <div className={classes.actions}>
           <Button
             color="primary"

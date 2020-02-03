@@ -126,7 +126,7 @@ function AboutProject({ className, ...rest }) {
         <form>
           <Alert
             className={classes.alert}
-            message="Once you choose the project name you can’t change it unless you contact customer support."
+            message="Once you choose the project name you can’t change it unless you contact support."
           />
           <div className={classes.formGroup}>
             <TextField
@@ -137,43 +137,6 @@ function AboutProject({ className, ...rest }) {
               value={values.name}
               variant="outlined"
             />
-          </div>
-          <div className={classes.formGroup}>
-            <div className={classes.fieldGroup}>
-              <TextField
-                className={classes.flexGrow}
-                label="Project Tags"
-                name="tag"
-                onChange={(event) => handleFieldChange(event, 'tag', event.target.value)}
-                value={values.tag}
-                variant="outlined"
-              />
-              <Button
-                className={classes.addButton}
-                onClick={handleTagAdd}
-                size="small"
-              >
-                <AddIcon className={classes.addIcon} />
-                Add
-              </Button>
-            </div>
-            <Typography
-              className={classes.fieldHint}
-              variant="body2"
-            >
-              Tags will be colored depending the technology if the system
-              recognises.
-            </Typography>
-            <div className={classes.tags}>
-              {values.tags.map((tag) => (
-                <Chip
-                  deleteIcon={<CloseIcon />}
-                  key={tag}
-                  label={tag}
-                  onDelete={() => handleTagDelete(tag)}
-                />
-              ))}
-            </div>
           </div>
           <div className={classes.formGroup}>
             <div className={classes.fieldGroup}>
