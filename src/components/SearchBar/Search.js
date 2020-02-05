@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
 function Search({ onSearch, className, ...rest }) {
   const classes = useStyles();
 
+  const handleInput = (e) => {
+    onSearch(e.target.value)
+  }
+
   return (
     <div
       {...rest}
@@ -45,18 +49,11 @@ function Search({ onSearch, className, ...rest }) {
         <SearchIcon className={classes.searchIcon} />
         <Input
           className={classes.searchInput}
+          onChange={handleInput}
           disableUnderline
           placeholder="Search"
         />
       </Paper>
-      <Button
-        className={classes.searchButton}
-        onClick={onSearch}
-        size="large"
-        variant="contained"
-      >
-        Search
-      </Button>
     </div>
   );
 }

@@ -1,26 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
+import axios from 'src/utils/axios';
 import {
   Button,
-  Chip,
   Collapse,
   Divider,
   Drawer,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
   Slider,
   TextField,
   Typography
 } from '@material-ui/core';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
-import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,21 +84,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const paymentStatusOptions = ['Pending', 'Canceled', 'Completed', 'Rejected'];
-
-const customerAgeOption = ['18 - 30', '30 - 45', '50 - 60', '60+'];
+const projectStatusOptions = ['Tender', 'In Progress', 'Alert', 'Overdue', 'Complete', 'Closed', 'Awaiting Retention'];
 
 const initialValues = {
-  paymentStatus: '',
-  tag: '',
-  tags: ['Full-Time'],
-  amount: [1, 7],
-  projectStatus: 'ended',
-  customerName: '',
-  customerType: 'freelancer',
-  customerEmail: '',
-  customerPhone: '',
-  customerAge: ''
+  projectStatus: '',
+  amount: [0, 2000],
+  client: '',
+  projectManager: '',
+  facility: '',
+  campaign: '',
+  type: ''
 };
 
 function Filter({
@@ -115,55 +105,130 @@ function Filter({
 }) {
   const classes = useStyles();
   const [expandProject, setExpandProject] = useState(true);
-  const [expandCustomer, setExpandCustomer] = useState(false);
   const [values, setValues] = useState({ ...initialValues });
+  const [clients, setClients] = useState([]);
+  const [projectManagers, setProjectManagers] = useState([]);
+  const [facilities, setFacilities] = useState([]);
+  const [filteredFacilties, setFilteredFacilities] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
+  const [filteredCampaigns, setFilteredCampaigns] = useState([]);
+  const [statuses, setStatuses] = useState([]);
+  const [types, setTypes] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchClients = () => {
+      axios.get('/clients').then((response) => {
+        if (mounted) {
+          setClients(response.data);
+        }
+      }).catch(error => {
+        console.log(error)
+      });
+    };
+
+    const fetchFacilities = () => {
+      axios.get('/facilities').then((response) => {
+        if (mounted) {
+          setFacilities(response.data);
+        }
+      }).catch(error => {
+        console.log(error)
+      });
+    };
+
+    const fetchProjectManagers = () => {
+      axios.get('/employees/projectManagers').then((response) => {
+        if (mounted) {
+          setProjectManagers(response.data);
+        }
+      }).catch(error => {
+        console.log(error)
+      });
+    };
+
+    const fetchCampaigns = () => {
+      axios.get('/campaigns').then((response) => {
+        if (mounted) {
+          setCampaigns(response.data);
+        }
+      }).catch(error => {
+        console.log(error)
+      });
+    };
+
+    const fetchTypes = () => {
+      axios.get('/projects/types').then((response) => {
+        if (mounted) {
+          setTypes(response.data);
+        }
+      }).catch(error => {
+        console.log(error)
+      });
+    };
+
+    const fetchStatuses = () => {
+      axios.get('/projects/statuses').then((response) => {
+        if (mounted) {
+          setStatuses(response.data);
+        }
+      }).catch(error => {
+        console.log(error)
+      });
+    };
+
+    fetchClients();
+    fetchFacilities();
+    fetchProjectManagers();
+    fetchCampaigns();
+    fetchTypes();
+    fetchStatuses();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleClear = () => {
     setValues({ ...initialValues });
   };
 
   const handleFieldChange = (event, field, value) => {
-    if (event) {
-      event.persist();
-    }
-
     setValues((prevValues) => ({
       ...prevValues,
       [field]: value
     }));
   };
 
-  const handleTagAdd = () => {
-    setValues((prevValues) => {
-      const newValues = { ...prevValues };
+  const handleClientFieldChange = (value) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      'client': value
+    }));
+    
+    setFilteredFacilities(facilities.filter(function(facility) {
+      return facility.client == value;
+    }));
 
-      if (newValues.tag && !newValues.tags.includes(newValues.tag)) {
-        newValues.tags = [...newValues.tags];
-        newValues.tags.push(newValues.tag);
-      }
+    setFilteredCampaigns(campaigns.filter(function(campaign) {
+      return campaign.client == value && campaign.facility.toLowerCase().includes(values.facility);
+    }));
+  }
 
-      newValues.tag = '';
+  const handleFacilityFieldChange = (value) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      'facility': value
+    }));
 
-      return newValues;
-    });
-  };
-
-  const handleTagDelete = (tag) => {
-    setValues((prevValues) => {
-      const newValues = { ...prevValues };
-
-      newValues.tags = newValues.tags.filter((t) => t !== tag);
-
-      return newValues;
-    });
-  };
+    setFilteredCampaigns(campaigns.filter(function(campaign) {
+      return campaign.client == values.client && campaign.facility.toLowerCase().includes(value.toLowerCase());
+    }));
+  }
 
   const handleToggleProject = () => {
     setExpandProject((prevExpandProject) => !prevExpandProject);
-  };
-
-  const handleToggleCustomer = () => {
-    setExpandCustomer((prevExpandCustomer) => !prevExpandCustomer);
   };
 
   const handleSubmit = (event) => {
@@ -212,63 +277,178 @@ function Filter({
                   <TextField
                     className={classes.field}
                     fullWidth
-                    label="Payment status"
+                    label="Project Status"
                     margin="dense"
-                    name="paymentStatus"
+                    name="projectStatus"
                     onChange={(event) => handleFieldChange(
                       event,
-                      'paymentStatus',
+                      'projectStatus',
                       event.target.value
                     )}
+                    value={values.status}
                     select
                     SelectProps={{ native: true }}
-                    value={values.paymentStatus}
+                    variant="outlined"
+                  >
+                    <option
+                      value=""
+                    />
+                    {statuses.map((option) => (
+                      <option
+                        key={option.id}
+                        value={option.id}
+                      >
+                        {option.name}
+                      </option>
+                    ))}
+                  </TextField>
+                </div>
+                <div className={classes.formGroup}>
+                  <TextField
+                    className={classes.field}
+                    fullWidth
+                    label="Project Type"
+                    margin="dense"
+                    name="projectType"
+                    onChange={(event) => handleFieldChange(
+                      event,
+                      'projectType',
+                      event.target.value
+                    )}
+                    value={values.type}
+                    select
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    <option
+                      value=""
+                    />
+                    {types.map((option) => (
+                      <option
+                        key={option.id}
+                        value={option.id}
+                      >
+                        {option.name}
+                      </option>
+                    ))}
+                  </TextField>
+                </div>
+                <div className={classes.formGroup}>
+                  <TextField
+                    className={classes.field}
+                    fullWidth
+                    label="Project Manager"
+                    margin="dense"
+                    name="projectManager"
+                    onChange={(event) => handleFieldChange(
+                      event,
+                      'projectManager',
+                      event.target.value
+                    )}
+                    value={values.projectManager}
+                    select
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    <option
+                      value=""
+                    />
+                    {projectManagers.map((option) => (
+                      <option
+                        key={option.id}
+                        value={option.id}
+                      >
+                        {option.name}
+                      </option>
+                    ))}
+                  </TextField>
+                </div>
+                <div className={classes.formGroup}>
+                  <TextField
+                    className={classes.field}
+                    fullWidth
+                    label="Client"
+                    margin="dense"
+                    name="client"
+                    onChange={(event) => handleClientFieldChange(
+                      event.target.value
+                    )}
+                    value={values.client}
+                    select
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    <option
+                      value=""
+                    />
+                    {clients.map((option) => (
+                      <option
+                        key={option.id}
+                        value={option.id}
+                      >
+                        {option.name}
+                      </option>
+                    ))}
+                  </TextField>
+                </div>
+                <div className={classes.formGroup}>
+                  <TextField
+                    className={classes.field}
+                    fullWidth
+                    label="Facility"
+                    margin="dense"
+                    name="facility"
+                    onChange={(event) => handleFacilityFieldChange(
+                      event.target.value
+                    )}
+                    value={values.facility}
+                    select
+                    SelectProps={{ native: true }}
                     variant="outlined"
                   >
                     <option
                       disabled
                       value=""
                     />
-                    {paymentStatusOptions.map((option) => (
+                    {filteredFacilties.map((option) => (
                       <option
-                        key={option}
-                        value={option}
+                        key={option.client + ' - ' + option.location}
+                        value={option.location}
                       >
-                        {option}
+                        {option.location}
                       </option>
                     ))}
                   </TextField>
                 </div>
                 <div className={classes.formGroup}>
-                  <div className={classes.fieldGroup}>
-                    <TextField
-                      className={clsx(classes.field, classes.flexGrow)}
-                      label="Filter Tags"
-                      margin="dense"
-                      name="tag"
-                      onChange={(event) => handleFieldChange(event, 'tag', event.target.value)}
-                      value={values.tag}
-                      variant="outlined"
+                  <TextField
+                    className={classes.field}
+                    fullWidth
+                    label="Campaign"
+                    margin="dense"
+                    name="campaign"
+                    onChange={(event) => handleFieldChange(
+                      event,
+                      'campaign',
+                      event.target.value
+                    )}
+                    value={values.campaign}
+                    select
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    <option
+                      value=""
                     />
-                    <Button
-                      className={classes.addButton}
-                      onClick={handleTagAdd}
-                      size="small"
-                    >
-                      <AddIcon className={classes.addIcon} />
-                      Add
-                    </Button>
-                  </div>
-                  <div className={classes.tags}>
-                    {values.tags.map((tag) => (
-                      <Chip
-                        deleteIcon={<CloseIcon />}
-                        key={tag}
-                        label={tag}
-                        onDelete={() => handleTagDelete(tag)}
-                      />
+                    {filteredCampaigns.map((option) => (
+                      <option
+                        key={option.id}
+                        value={option.id}
+                      >
+                        {option.name}
+                      </option>
                     ))}
-                  </div>
+                  </TextField>
                 </div>
                 <div className={classes.formGroup}>
                   <Typography
@@ -289,8 +469,8 @@ function Filter({
                     </Typography>
                     <Slider
                       className={classes.flexGrow}
-                      max={20}
-                      min={1}
+                      max={2000}
+                      min={0}
                       onChange={(event, value) => handleFieldChange(event, 'amount', value)}
                       value={values.amount}
                       valueLabelDisplay="auto"
@@ -303,161 +483,6 @@ function Filter({
                       {values.amount[1]}
                       K
                     </Typography>
-                  </div>
-                </div>
-                <div className={classes.formGroup}>
-                  <Typography
-                    component="p"
-                    gutterBottom
-                    variant="overline"
-                  >
-                    Project status
-                  </Typography>
-                  <div className={classes.fieldGroup}>
-                    <RadioGroup
-                      className={classes.radioGroup}
-                      name="projectStatus"
-                      onChange={(event) => handleFieldChange(
-                        event,
-                        'projectStatus',
-                        event.target.value
-                      )}
-                      value={values.projectStatus}
-                    >
-                      <FormControlLabel
-                        control={<Radio color="primary" />}
-                        label="Ended"
-                        value="ended"
-                      />
-                      <FormControlLabel
-                        control={<Radio color="primary" />}
-                        label="On-Going"
-                        value="onGoing"
-                      />
-                      <FormControlLabel
-                        control={<Radio color="primary" />}
-                        label="In Review"
-                        value="inReview"
-                      />
-                      <FormControlLabel
-                        control={<Radio color="primary" />}
-                        label="Competed"
-                        value="completed"
-                      />
-                    </RadioGroup>
-                  </div>
-                </div>
-              </div>
-            </Collapse>
-          </div>
-          <div className={classes.contentSection}>
-            <div
-              className={classes.contentSectionHeader}
-              onClick={handleToggleCustomer}
-            >
-              <Typography variant="h5">Customer</Typography>
-              {expandCustomer ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </div>
-            <Divider />
-            <Collapse in={expandCustomer}>
-              <div className={classes.contentSectionContent}>
-                <div className={classes.contentSectionContent}>
-                  <div className={classes.formGroup}>
-                    <TextField
-                      className={classes.field}
-                      fullWidth
-                      label="Customer name"
-                      margin="dense"
-                      name="customerName"
-                      onChange={(event) => handleFieldChange(
-                        event,
-                        'customerName',
-                        event.target.value
-                      )}
-                      value={values.customerName}
-                      variant="outlined"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <ToggleButtonGroup
-                      exclusive
-                      onChange={(event, value) => value && handleFieldChange(event, 'customerType', value)}
-                      size="small"
-                      value={values.customerType}
-                      variant="outlined"
-                    >
-                      <ToggleButton
-                        color="primary"
-                        value="projectOwner"
-                      >
-                        Project owner
-                      </ToggleButton>
-                      <ToggleButton value="freelancer">Freelancer</ToggleButton>
-                    </ToggleButtonGroup>
-                  </div>
-                  <div className={classes.formGroup}>
-                    <TextField
-                      className={classes.field}
-                      fullWidth
-                      label="Email address"
-                      margin="dense"
-                      name="customerEmail"
-                      onChange={(event) => handleFieldChange(
-                        event,
-                        'customerEmail',
-                        event.target.value
-                      )}
-                      value={values.customerEmail}
-                      variant="outlined"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <TextField
-                      className={classes.field}
-                      fullWidth
-                      label="Phone number"
-                      margin="dense"
-                      name="customerPhone"
-                      onChange={(event) => handleFieldChange(
-                        event,
-                        'customerPhone',
-                        event.target.value
-                      )}
-                      value={values.customerPhone}
-                      variant="outlined"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <TextField
-                      className={classes.field}
-                      fullWidth
-                      label="Age"
-                      margin="dense"
-                      name="customerAge"
-                      onChange={(event) => handleFieldChange(
-                        event,
-                        'customerAge',
-                        event.target.value
-                      )}
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}
-                      value={values.customerAge}
-                      variant="outlined"
-                    >
-                      <option
-                        disabled
-                        value=""
-                      />
-                      {customerAgeOption.map((option) => (
-                        <option
-                          key={option}
-                          value={option}
-                        >
-                          {option}
-                        </option>
-                      ))}
-                    </TextField>
                   </div>
                 </div>
               </div>

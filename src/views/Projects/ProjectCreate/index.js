@@ -5,6 +5,7 @@ import Page from 'src/components/Page';
 import Header from './Header';
 import AboutAuthor from './AboutAuthor';
 import AboutProject from './AboutProject';
+import ClientDetails from './ClientDetails';
 import Preferences from './Preferences';
 import ProjectCover from './ProjectCover';
 import ProjectDetails from './ProjectDetails';
@@ -18,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3)
   },
   aboutProject: {
+    marginTop: theme.spacing(3)
+  },
+  clientDetails: {
     marginTop: theme.spacing(3)
   },
   projectCover: {
@@ -44,6 +48,7 @@ function ProjectCreate() {
     >
       <Container maxWidth="lg">
         <Header />
+        <ClientDetails className={classes.clientDetails} />
         <AboutProject className={classes.aboutProject} />
         <ProjectDetails className={classes.projectDetails} />
         <div className={classes.actions}>

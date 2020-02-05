@@ -176,15 +176,15 @@ function TopBar({
   useEffect(() => {
     let mounted = true;
 
-    const fetchNotifications = () => {
+    /*const fetchNotifications = () => {
       axios.get('/api/account/notifications').then((response) => {
         if (mounted) {
           setNotifications(response.data.notifications);
         }
-      });
+      }).catch(error => console.log(error));;
     };
 
-    fetchNotifications();
+    fetchNotifications();*/
 
     return () => {
       mounted = false;

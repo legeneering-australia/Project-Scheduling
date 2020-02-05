@@ -10,8 +10,6 @@ import {
   TextField,
   Grid
 } from '@material-ui/core';
-import { DatePicker } from '@material-ui/pickers';
-import Alert from 'src/components/Alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -55,29 +53,6 @@ const initialValues = {
 function AboutProject({ className, ...rest }) {
   const classes = useStyles();
   const [values, setValues] = useState({ ...initialValues });
-  const [calendarTrigger, setCalendarTrigger] = useState(null);
-  const calendarOpen = Boolean(calendarTrigger);
-  const calendarMinDate = calendarTrigger === 'startDate'
-    ? moment()
-    : moment(values.startDate).add(1, 'day');
-  const calendarValue = values[calendarTrigger];
-
-  const handleCalendarOpen = (trigger) => {
-    setCalendarTrigger(trigger);
-  };
-
-  const handleCalendarChange = () => {};
-
-  const handleCalendarAccept = (date) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      [calendarTrigger]: date
-    }));
-  };
-
-  const handleCalendarClose = () => {
-    setCalendarTrigger(false);
-  };
 
   const handleFieldChange = (event, field, value) => {
     event.persist();
@@ -86,6 +61,36 @@ function AboutProject({ className, ...rest }) {
       [field]: value
     }));
   };
+
+  const clients = [
+    {
+      value: 'none',
+      label: 'None'
+    },
+    {
+      value: 'wel',
+      label: 'Woodside Energy'
+    },
+    {
+      value: 'bhp',
+      label: 'BHP'
+    }
+  ];
+
+  const assets = [
+    {
+      value: 'none',
+      label: 'None'
+    },
+    {
+      value: 'okha',
+      label: 'OKHA FPSO'
+    },
+    {
+      value: 'ny',
+      label: 'Ngujima-Yin FPSO'
+    }
+  ];
 
   const campaigns = [
     {
@@ -119,13 +124,9 @@ function AboutProject({ className, ...rest }) {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardHeader title="Project Info" />
+      <CardHeader title="Client Details" />
       <CardContent>
         <form>
-          <Alert
-            className={classes.alert}
-            message="Once you choose the project name you can’t change it unless you use M1."
-          />
           <Grid
             container
             spacing={2}
@@ -136,105 +137,17 @@ function AboutProject({ className, ...rest }) {
             >
               <TextField
                 fullWidth
-                label="Project ID"
-                margin="dense"
-                name="id"
-                disabled
-                required
-                // eslint-disable-next-line react/jsx-sort-props
-                value={values.client}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              xs={9}
-            >
-              <TextField
-                fullWidth
-                label="Project Name"
-                margin="dense"
-                name="name"
-                required
-                // eslint-disable-next-line react/jsx-sort-props
-                value={values.asset}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              xs={3}
-            >
-              <TextField
-                fullWidth
-                label="Project Type"
-                margin="dense"
-                name="type"
-                required
-                // eslint-disable-next-line react/jsx-sort-props
-                value={values.asset}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              xs={3}
-            >
-              <TextField
-                fullWidth
-                helperText=""
-                label="Project Manager"
-                margin="dense"
-                name="manager"
-                required
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              xs={3}
-            >
-            <TextField
-              fullWidth
-              margin="dense"
-              label="Start Date"
-              name="startDate"
-              onClick={() => handleCalendarOpen('startDate')}
-              value={moment().format('DD/MM/YYYY')}
-              variant="outlined"
-            />
-            </Grid>
-            <Grid
-              item
-              xs={3}
-            >
-            <TextField
-              fullWidth
-              margin="dense"
-              label="End Date"
-              name="endDate"
-              onClick={() => handleCalendarOpen('endDate')}
-              value={moment().format('DD/MM/YYYY')}
-              variant="outlined"
-            />
-            </Grid>
-            <Grid
-              item
-              xs={3}
-            >
-              <TextField
-                fullWidth
-                label="Campaign"
-                margin="dense"
-                name="campaign"
+                label="Client"
+                name="client"
                 required
                 select
+                margin="dense"
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-                value={values.asset}
+                value={values.client}
                 variant="outlined"
               >
-                {campaigns.map(option => (
+                {clients.map(option => (
                   <option
                     key={option.value}
                     value={option.value}
@@ -244,19 +157,75 @@ function AboutProject({ className, ...rest }) {
                 ))}
               </TextField>
             </Grid>
+            <Grid
+              item
+              xs={3}
+            >
+              <TextField
+                fullWidth
+                label="Facility"
+                name="facility"
+                required
+                select
+                margin="dense"
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value={values.asset}
+                variant="outlined"
+              >
+                {assets.map(option => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid
+              item
+              xs={3}
+            >
+              <TextField
+                fullWidth
+                label="Client Contact"
+                name="contact"
+                required
+                select
+                margin="dense"
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value={values.asset}
+                variant="outlined"
+              >
+                {assets.map(option => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid
+              item
+              xs={3}
+            >
+              <TextField
+                fullWidth
+                helperText=""
+                margin="dense"
+                label="Client Project Number"
+                name="clientProjectNumber"
+                required
+                variant="outlined"
+              />
+            </Grid>
           </Grid>
         </form>
       </CardContent>
-      <DatePicker
-        minDate={calendarMinDate}
-        onAccept={handleCalendarAccept}
-        onChange={handleCalendarChange}
-        onClose={handleCalendarClose}
-        open={calendarOpen}
-        style={{ display: 'none' }} // Hide the input element
-        value={calendarValue}
-        variant="dialog"
-      />
     </Card>
   );
 }
