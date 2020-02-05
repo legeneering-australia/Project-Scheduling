@@ -88,7 +88,7 @@ export default [
         component: lazy(() => import('src/views/Projects/ProjectCreate'))
       },
       {
-        path: '/projects/details',
+        path: '/projects/details/:id/:tab',
         exact: true,
         component: lazy(() => import('src/views/Projects/ProjectDetails'))
       },

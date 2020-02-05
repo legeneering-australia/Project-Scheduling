@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Avatar,
   Button,
   Card,
   CardContent,
@@ -14,7 +13,6 @@ import {
   colors,
   Grid
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,14 +71,17 @@ function ProjectCard({ project, className, ...rest }) {
     Overdue: colors.red[600]
   };
 
-  const handleClick = () => {
+  const activeStatus = project.status == 5 ? 'Inactive' : 'Active'
 
-  }
+  const activeColors = {
+    Inactive: colors.grey[100]
+  };
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
+      style={{ backgroundColor: activeColors[activeStatus] }}
     >
       <CardContent className={classes.content}>
         <Grid
@@ -94,7 +95,7 @@ function ProjectCard({ project, className, ...rest }) {
             <Link
               color="textPrimary"
               component={RouterLink}
-              to={"/project/details/?id=" + project.id}
+              to={"/projects/details/"+project.id+"/overview"}
               variant="h5"
             >
               {project.name}
@@ -139,7 +140,7 @@ function ProjectCard({ project, className, ...rest }) {
             style={{ color: statusColors[project.status] }}
             variant="h6"
           >
-            {project.status}
+            {project.statusName}
           </Typography>
           <Typography variant="body2">Project Status</Typography>
           </Grid>
@@ -149,8 +150,8 @@ function ProjectCard({ project, className, ...rest }) {
             color="primary"
             size="small"
             variant="outlined"
-            to={"/project/details/?id=" + project.id}
-            to="/projects/create"
+            component={RouterLink}
+            to={"/projects/details/"+project.id+"/overview"}
           >
             View
           </Button>

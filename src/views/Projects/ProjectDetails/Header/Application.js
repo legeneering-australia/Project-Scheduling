@@ -113,16 +113,9 @@ function Application({
             variant="outlined"
           />
           <div className={classes.author}>
-            <Avatar
-              alt="Author"
-              className={classes.avatar}
-              src={author.avatar}
-            >
-              {getInitials(author.name)}
-            </Avatar>
             <div>
-              <Typography variant="h3">{author.name}</Typography>
-              <Typography variant="subtitle2">{author.bio}</Typography>
+              <Typography variant="h3"></Typography>
+              <Typography variant="subtitle2"></Typography>
             </div>
           </div>
         </div>

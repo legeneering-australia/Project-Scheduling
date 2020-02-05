@@ -44,9 +44,8 @@ function ProjectDetails({ match, history }) {
   const [project, setProject] = useState(null);
   const tabs = [
     { value: 'overview', label: 'Overview' },
-    { value: 'files', label: 'Files' },
-    { value: 'activity', label: 'Activity' },
-    { value: 'subscribers', label: 'Subscribers' }
+    { value: 'costs', label: 'Costs' },
+    { value: 'jobs', label: 'Jobs' }
   ];
 
   const handleAlertClose = () => {
@@ -61,9 +60,9 @@ function ProjectDetails({ match, history }) {
     let mounted = true;
 
     const fetchProject = () => {
-      axios.get('/api/projects/1').then((response) => {
+      axios.get('/projects/details/?id=' + id).then((response) => {
         if (mounted) {
-          setProject(response.data.project);
+          setProject(response.data);
         }
       });
     };
@@ -86,6 +85,16 @@ function ProjectDetails({ match, history }) {
   if (!project) {
     return null;
   }
+
+  /*
+        <div className={classes.content}>
+          {tab === 'overview' && <Overview project={[]} />}
+          {tab === 'files' && <Files files={[]} />}
+          {tab === 'activity' && <Activities activities={[]} />}
+          {tab === 'subscribers' && (
+            <Subscribers subscribers={[]} />
+          )}
+        </div>*/
 
   return (
     <Page
@@ -117,14 +126,6 @@ function ProjectDetails({ match, history }) {
             onClose={handleAlertClose}
           />
         )}
-        <div className={classes.content}>
-          {tab === 'overview' && <Overview project={project} />}
-          {tab === 'files' && <Files files={project.files} />}
-          {tab === 'activity' && <Activities activities={project.activities} />}
-          {tab === 'subscribers' && (
-            <Subscribers subscribers={project.subscribers} />
-          )}
-        </div>
       </Container>
     </Page>
   );

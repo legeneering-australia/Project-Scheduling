@@ -93,7 +93,7 @@ const initialValues = {
   projectManager: '',
   facility: '',
   campaign: '',
-  type: ''
+  projectType: ''
 };
 
 function Filter({
@@ -129,7 +129,7 @@ function Filter({
     };
 
     const fetchFacilities = () => {
-      axios.get('/facilities').then((response) => {
+      axios.get('/clients/facilities').then((response) => {
         if (mounted) {
           setFacilities(response.data);
         }
@@ -285,7 +285,7 @@ function Filter({
                       'projectStatus',
                       event.target.value
                     )}
-                    value={values.status}
+                    value={values.projectStatus}
                     select
                     SelectProps={{ native: true }}
                     variant="outlined"
@@ -315,7 +315,7 @@ function Filter({
                       'projectType',
                       event.target.value
                     )}
-                    value={values.type}
+                    value={values.projectType}
                     select
                     SelectProps={{ native: true }}
                     variant="outlined"
