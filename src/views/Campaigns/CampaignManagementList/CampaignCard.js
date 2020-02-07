@@ -5,15 +5,14 @@ import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Avatar,
   Button,
   Card,
   CardContent,
   Link,
   Typography,
-  colors
+  colors,
+  Grid
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,69 +75,90 @@ function CampaignCard({ campaign, className, ...rest }) {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardContent className={classes.content}>
-        <div className={classes.header}>
-          <div>
+       <CardContent className={classes.content}>
+        <Grid
+          container
+          spacing={1}
+        >
+          <Grid
+            item
+            xs={2}
+          >
             <Link
               color="textPrimary"
               component={RouterLink}
-              noWrap
-              to="#"
+              to={"/campaigns/details/"+campaign.id+"/overview"}
               variant="h5"
             >
-              {campaign.title}
+              {campaign.name}
             </Link>
             <Typography variant="body2">
-              Client
-              {' '}
-              <Link
-                color="textPrimary"
-                component={RouterLink}
-                to="/management/customers/1"
-                variant="h6"
-              >
-                {campaign.author.name}
-              </Link>
+              {campaign.clientName}
             </Typography>
-          </div>
-        </div>
-        <div className={classes.stats}>
-          <Typography variant="h6">
-            {campaign.currency}
-            {campaign.price}
-          </Typography>
-          <Typography variant="body2">Campaign Value</Typography>
-        </div>
-        <div className={classes.stats}>
-          <Typography variant="h6">{campaign.members}</Typography>
-          <Typography variant="body2">Projects</Typography>
-        </div>
-        <div className={classes.stats}>
-          <Typography variant="h6">
-            {moment(campaign.start_date).format('DD MMMM YYYY')}
-          </Typography>
-          <Typography variant="body2">Campaign Started</Typography>
-        </div>
-        <div className={classes.stats}>
-          <Typography variant="h6">
-            {moment(campaign.execute_date).format('DD MMMM YYYY')}
-          </Typography>
-          <Typography variant="body2">Campaign Execution</Typography>
-        </div>
-        <div className={classes.stats}>
-          <Typography
-            style={{ color: statusColors[campaign.status] }}
-            variant="h6"
+          </Grid>
+          <Grid
+            item
+            xs={2}
           >
-            {campaign.status}
-          </Typography>
-          <Typography variant="body2">Campaign Status</Typography>
-        </div>
+            <Typography variant="h6">
+              $
+              {campaign.value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+            </Typography>
+            <Typography variant="body2">Campaign Value</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={2}
+          >
+            <Typography variant="h6">
+              {moment(campaign.execDate).format('DD MMMM YYYY')}
+            </Typography>
+            <Typography variant="body2">Execution Date</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={1}
+          >
+            <Typography variant="h6">
+              {campaign.currentPhase}
+            </Typography>
+            <Typography variant="body2">Current Phase</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={2}
+          >
+            <Typography variant="h6">
+              {campaign.upcomingMilestone}
+            </Typography>
+            <Typography variant="body2">Upcoming Milestone</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={2}
+          >
+            <Typography variant="h6">
+              {moment(campaign.dueDate).format('DD MMMM YYYY')}
+            </Typography>
+            <Typography variant="body2">Milestone Deadline</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={1}
+          >
+            <Typography variant="h6">
+              {campaign.delta}
+            </Typography>
+          <Typography variant="body2">{campaign.delta > 0 ? 'Days Ahead' : 'Days Behind'}</Typography>
+          </Grid>
+        </Grid>
         <div className={classes.actions}>
           <Button
             color="primary"
             size="small"
             variant="outlined"
+            component={RouterLink}
+            to={"/campaigns/details/"+campaign.id+"/overview"}
           >
             View
           </Button>
@@ -150,7 +170,7 @@ function CampaignCard({ campaign, className, ...rest }) {
 
 CampaignCard.propTypes = {
   className: PropTypes.string,
-  campaigns: PropTypes.object.isRequired
+  campaign: PropTypes.object.isRequired
 };
 
 export default CampaignCard;

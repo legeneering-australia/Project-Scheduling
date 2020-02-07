@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
-import Brief from './Brief';
-import Deliverables from './Deliverables';
-import Holder from './Holder';
-import Members from './Members';
+import ProjectInfo from './ProjectInfo';
+import ClientDetails from './ClientDetails';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -18,8 +17,60 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Overview({ project, className, ...rest }) {
+function Overview({ project, onSubmit, className, ...rest }) {
   const classes = useStyles();
+  const [values, setValues] = useState({
+    id: project.id,
+    location: project.location,
+    campaign: project.campaign,
+    projectNumber: project.projectNumber,
+    clientContact: project.clientContact,
+    name: project.name,
+    type: project.type,
+    manager: project.manager,
+    startDate: project.startDate,
+    endDate: project.endDate
+  });
+
+  const handleClientDetailsChange = data => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      location: data.location,
+      campaign: data.campaign,
+      projectNumber: data.projectNumber,
+      clientContact: data.clientContact
+    }));
+
+    if (onSubmit) {
+      values['location'] = data.location
+      values['campaign'] = data.campaign
+      values['projectNumber'] = data.projectNumber
+      values['clientContact'] = data.clientContact
+
+      onSubmit(values);
+    }
+  }
+  
+  const handleProjectDetailsChange = data => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      name: data.name,
+      type: data.type,
+      manager: data.manager,
+      startDate: data.startDate,
+      endDate: data.endDate
+    }));
+
+    if (onSubmit) {
+      values['name'] = data.name
+      values['type'] = data.type
+      values['manager'] = data.manager
+      values['startDate'] = data.startDate
+      values['endDate'] = data.endDate
+
+      onSubmit(values);
+    }
+  }
 
   return (
     <Grid
@@ -30,24 +81,15 @@ function Overview({ project, className, ...rest }) {
     >
       <Grid
         item
-        lg={8}
-        xl={9}
         xs={12}
       >
-        <Brief brief={project.brief} />
-        <Deliverables className={classes.deliverables} />
+        <ClientDetails project={project} onSubmit={handleClientDetailsChange}/>
       </Grid>
       <Grid
         item
-        lg={4}
-        xl={3}
         xs={12}
       >
-        <Holder project={project} />
-        <Members
-          className={classes.members}
-          members={project.members}
-        />
+        <ProjectInfo project={project} onSubmit={handleProjectDetailsChange}/>
       </Grid>
     </Grid>
   );
@@ -55,7 +97,8 @@ function Overview({ project, className, ...rest }) {
 
 Overview.propTypes = {
   className: PropTypes.string,
-  project: PropTypes.object.isRequired
+  project: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func
 };
 
 export default Overview;

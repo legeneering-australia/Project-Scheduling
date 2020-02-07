@@ -7,7 +7,6 @@ import Paginate from 'src/components/Paginate';
 import SearchBar from 'src/components/SearchBar';
 import Header from './Header';
 import ProjectCard from './ProjectCard';
-import paginate from 'paginate-array';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,15 +33,31 @@ function ProjectManagementList() {
   const [searchedProjects, setSearchedProjects] = useState([]);
 
   const handleFilter = data => {
-    setFilteredProjects(projects.filter(function(project) {
-      return project.client.includes(data.client) && project.facility.includes(data.facility) && project.campaign === data.campaign && project.manager.includes(data.projectManager) && project.value >= data.amount[0] * 1000 && project.value <= data.amount[1] * 1000 && project.type.includes(data.projectType) && project.status === data.projectStatus
-    }));
 
-    setSearchedProjects(projects.filter(function(project) {
-      return project.client.includes(data.client) && project.facility.includes(data.facility) && project.campaign === data.campaign && project.manager.includes(data.projectManager) && project.value >= data.amount[0] * 1000 && project.value <= data.amount[1] * 1000 && project.type.includes(data.projectType) && project.status === data.projectStatus
-    }).filter(function(project) {
-      return project.id.toLowerCase().includes(searchInput.toLowerCase()) || project.name.toLowerCase().includes(searchInput.toLowerCase());
-    }))
+    if (data.campaign !== '')
+    {
+      setFilteredProjects(projects.filter(function(project) {
+        return project.client.includes(data.client) && project.facility.includes(data.facility) && project.campaign === data.campaign && project.manager.includes(data.projectManager) && project.value >= data.amount[0] * 1000 && project.value <= data.amount[1] * 1000 && project.type.includes(data.projectType) && project.status === data.projectStatus
+      }));
+  
+      setSearchedProjects(projects.filter(function(project) {
+        return project.client.includes(data.client) && project.facility.includes(data.facility) && project.manager.includes(data.projectManager) && project.value >= data.amount[0] * 1000 && project.value <= data.amount[1] * 1000 && project.type.includes(data.projectType) && project.statusName.includes(data.projectStatus) && project.campaign === data.campaign
+      }).filter(function(project) {
+        return project.id.toLowerCase().includes(searchInput.toLowerCase()) || project.name.toLowerCase().includes(searchInput.toLowerCase());
+      }))
+    }
+    else
+    {
+      setFilteredProjects(projects.filter(function(project) {
+        return project.client.includes(data.client) && project.facility.includes(data.facility) && project.manager.includes(data.projectManager) && project.value >= data.amount[0] * 1000 && project.value <= data.amount[1] * 1000 && project.type.includes(data.projectType) && project.status === data.projectStatus
+      }));
+  
+      setSearchedProjects(projects.filter(function(project) {
+        return project.client.includes(data.client) && project.facility.includes(data.facility) && project.manager.includes(data.projectManager) && project.value >= data.amount[0] * 1000 && project.value <= data.amount[1] * 1000 && project.type.includes(data.projectType) && project.statusName.includes(data.projectStatus)
+      }).filter(function(project) {
+        return project.id.toLowerCase().includes(searchInput.toLowerCase()) || project.name.toLowerCase().includes(searchInput.toLowerCase());
+      }))
+    }
 
 }
 

@@ -44,17 +44,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const initialValues = {
-  name: '',
-  type: '',
-  manager: '',
-  startDate: moment(),
-  endDate: moment().add(1, 'day')
-};
-
-function AboutProject({ onSubmit, className, ...rest }) {
+function AboutProject({ project, onSubmit, className, ...rest }) {
   const classes = useStyles();
-  const [values, setValues] = useState({ ...initialValues });
+  const [values, setValues] = useState({
+    name: project.name,
+    type: project.type,
+    manager: project.manager,
+    startDate: project.startDate,
+    endDate: project.endDate
+  });
   const [types, setTypes] = useState([]);
   const [managers, setProjectManagers] = useState([]);
   const [calendarTrigger, setCalendarTrigger] = useState(null);
@@ -114,9 +112,10 @@ function AboutProject({ onSubmit, className, ...rest }) {
       });
     };
 
-
     fetchProjectManagers();
     fetchTypes();
+
+    onSubmit(values);
 
     return () => {
       mounted = false;
@@ -279,7 +278,8 @@ function AboutProject({ onSubmit, className, ...rest }) {
 
 AboutProject.propTypes = {
   className: PropTypes.string,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  project: PropTypes.object.isRequired
 };
 
 export default AboutProject;

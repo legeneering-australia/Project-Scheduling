@@ -7,16 +7,15 @@ import {
   Tabs,
   Tab,
   Divider,
-  colors
+  colors,
+  Grid,
+  Typography,
+  Button
 } from '@material-ui/core';
 import axios from 'src/utils/axios';
 import Page from 'src/components/Page';
-import Alert from 'src/components/Alert';
 import Header from './Header';
 import Overview from './Overview';
-import Files from './Files';
-import Activities from './Activities';
-import Subscribers from './Subscribers';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,23 +33,36 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     marginTop: theme.spacing(3)
+  },
+  label: {
+    marginTop: theme.spacing(1)
+  },
+  shareButton: {
+    backgroundColor: theme.palette.common.white,
+    marginRight: theme.spacing(2)
+  },
+  shareIcon: {
+    marginRight: theme.spacing(1)
+  },
+  applyButton: {
+    color: theme.palette.common.white,
+    backgroundColor: colors.green[600],
+    '&:hover': {
+      backgroundColor: colors.green[900]
+    }
   }
 }));
 
 function ProjectDetails({ match, history }) {
   const classes = useStyles();
   const { id, tab } = match.params;
-  const [openAlert, setOpenAlert] = useState(true);
   const [project, setProject] = useState(null);
+  const [overviewValues, setOverviewValues] = useState({});
   const tabs = [
     { value: 'overview', label: 'Overview' },
     { value: 'costs', label: 'Costs' },
     { value: 'jobs', label: 'Jobs' }
   ];
-
-  const handleAlertClose = () => {
-    setOpenAlert(false);
-  };
 
   const handleTabsChange = (event, value) => {
     history.push(value);
@@ -86,15 +98,27 @@ function ProjectDetails({ match, history }) {
     return null;
   }
 
+  const handleOverviewChange = data => {
+      setOverviewValues(data);
+  }
+
+  const handleUpdateProject = () => {
+    if (Object.entries(overviewValues).length !== 0)
+    {
+      axios.post('/projects/updatedetails', overviewValues).then((response) => {
+        console.log(response.data);
+      }).catch(error => {
+        console.log(error)
+      });
+    }
+  }
+
   /*
-        <div className={classes.content}>
-          {tab === 'overview' && <Overview project={[]} />}
           {tab === 'files' && <Files files={[]} />}
           {tab === 'activity' && <Activities activities={[]} />}
           {tab === 'subscribers' && (
             <Subscribers subscribers={[]} />
-          )}
-        </div>*/
+          )}*/
 
   return (
     <Page
@@ -102,7 +126,38 @@ function ProjectDetails({ match, history }) {
       title="Project Details"
     >
       <Container maxWidth="lg">
-        <Header project={project} />
+      <Grid
+        alignItems="flex-end"
+        container
+        justify="space-between"
+        spacing={3}
+      >
+        <Grid item>
+          <Typography
+            component="h2"
+            gutterBottom
+            variant="overline"
+          >
+            Project Details
+          </Typography>
+          <Typography
+            component="h1"
+            gutterBottom
+            variant="h3"
+          >
+            {project[0].id + ' - ' + project[0].name}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button
+            className={classes.applyButton}
+            variant="contained"
+            onClick={handleUpdateProject}
+          >
+            Update Project
+          </Button>
+        </Grid>
+      </Grid>
         <Tabs
           className={classes.tabs}
           onChange={handleTabsChange}
@@ -119,13 +174,9 @@ function ProjectDetails({ match, history }) {
           ))}
         </Tabs>
         <Divider className={classes.divider} />
-        {openAlert && (
-          <Alert
-            className={classes.alert}
-            message="The content holder has extended the deadline! Good luck"
-            onClose={handleAlertClose}
-          />
-        )}
+        <div className={classes.content}>
+          {tab === 'overview' && <Overview project={project[0]} onSubmit={handleOverviewChange} />}
+        </div>
       </Container>
     </Page>
   );

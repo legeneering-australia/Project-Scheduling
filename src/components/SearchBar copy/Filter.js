@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import axios from 'src/utils/axios';
+import axios from './node_modules/src/utils/axios';
 import {
   Button,
   Collapse,

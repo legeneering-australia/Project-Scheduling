@@ -5,6 +5,7 @@ import DashboardIcon from '@material-ui/icons/DashboardOutlined';
 import HomeIcon from '@material-ui/icons/HomeOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ListIcon from '@material-ui/icons/List';
+import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 
 export default [
   {
@@ -43,6 +44,17 @@ export default [
             title: 'Browse',
             href: '/campaigns'
           },
+          {
+            title: 'Maintenance',
+            href: '/campaigns/maintenance',
+            icon: SettingsIcon,
+            items: [
+              {
+                title: 'Campaign Templates',
+                href: '/campaings/maintenance/templates'
+              }
+            ]
+          }
         ]
       },
       {
@@ -58,6 +70,17 @@ export default [
             title: 'Browse',
             href: '/projects'
           },
+          {
+            title: 'Maintenance',
+            href: '/projects/maintenance',
+            icon: SettingsIcon,
+            items: [
+              {
+                title: 'Project Types',
+                href: '/projects/maintenance/types'
+              }
+            ]
+          }
         ]
       },
       {

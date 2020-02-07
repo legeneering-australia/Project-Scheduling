@@ -68,7 +68,7 @@ export default [
         component: lazy(() => import('src/views/Campaigns/CampaignCreate'))
       },
       {
-        path: '/campaigns/details',
+        path: '/campaigns/details/:id/:tab',
         exact: true,
         component: lazy(() => import('src/views/Campaigns/CampaignDetails'))
       },

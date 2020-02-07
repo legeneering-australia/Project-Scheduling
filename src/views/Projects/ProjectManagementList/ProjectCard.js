@@ -71,7 +71,7 @@ function ProjectCard({ project, className, ...rest }) {
     Overdue: colors.red[600]
   };
 
-  const activeStatus = project.status == 5 ? 'Inactive' : 'Active'
+  const activeStatus = project.status === 5 ? 'Inactive' : 'Active'
 
   const activeColors = {
     Inactive: colors.grey[100]

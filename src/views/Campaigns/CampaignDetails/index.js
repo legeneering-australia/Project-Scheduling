@@ -11,12 +11,8 @@ import {
 } from '@material-ui/core';
 import axios from 'src/utils/axios';
 import Page from 'src/components/Page';
-import Alert from 'src/components/Alert';
 import Header from './Header';
 import Overview from './Overview';
-import Files from './Files';
-import Activities from './Activities';
-import Subscribers from './Subscribers';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,21 +33,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function ProjectDetails({ match, history }) {
+function CampaignDetails({ match, history }) {
   const classes = useStyles();
   const { id, tab } = match.params;
-  const [openAlert, setOpenAlert] = useState(true);
-  const [project, setProject] = useState(null);
+  const [campaign, setCampaign] = useState(null);
   const tabs = [
     { value: 'overview', label: 'Overview' },
-    { value: 'files', label: 'Files' },
-    { value: 'activity', label: 'Activity' },
-    { value: 'subscribers', label: 'Subscribers' }
+    { value: 'costs', label: 'Costs' },
+    { value: 'projects', label: 'Projects' },
+    { value: 'milestones', label: 'Milestones' }
   ];
-
-  const handleAlertClose = () => {
-    setOpenAlert(false);
-  };
 
   const handleTabsChange = (event, value) => {
     history.push(value);
@@ -60,15 +51,15 @@ function ProjectDetails({ match, history }) {
   useEffect(() => {
     let mounted = true;
 
-    const fetchProject = () => {
-      axios.get('/api/projects/1').then((response) => {
+    const fetchCampaign = () => {
+      axios.get('/campaigns/details/?id=' + id).then((response) => {
         if (mounted) {
-          setProject(response.data.project);
+          setCampaign(response.data);
         }
       });
     };
 
-    fetchProject();
+    fetchCampaign();
 
     return () => {
       mounted = false;
@@ -76,24 +67,24 @@ function ProjectDetails({ match, history }) {
   }, []);
 
   if (!tab) {
-    return <Redirect to={`/projects/${id}/overview`} />;
+    return <Redirect to={`/campaigns/${id}/overview`} />;
   }
 
   if (!tabs.find((t) => t.value === tab)) {
     return <Redirect to="/errors/error-404" />;
   }
 
-  if (!project) {
+  if (!campaign) {
     return null;
   }
 
   return (
     <Page
       className={classes.root}
-      title="Project Details"
+      title="Campaign Details"
     >
       <Container maxWidth="lg">
-        <Header project={project} />
+        <Header campaign={campaign[0]} />
         <Tabs
           className={classes.tabs}
           onChange={handleTabsChange}
@@ -110,29 +101,17 @@ function ProjectDetails({ match, history }) {
           ))}
         </Tabs>
         <Divider className={classes.divider} />
-        {openAlert && (
-          <Alert
-            className={classes.alert}
-            message="The content holder has extended the deadline! Good luck"
-            onClose={handleAlertClose}
-          />
-        )}
         <div className={classes.content}>
-          {tab === 'overview' && <Overview project={project} />}
-          {tab === 'files' && <Files files={project.files} />}
-          {tab === 'activity' && <Activities activities={project.activities} />}
-          {tab === 'subscribers' && (
-            <Subscribers subscribers={project.subscribers} />
-          )}
+          {tab === 'overview' && <Overview campaign={campaign[0]} />}
         </div>
       </Container>
     </Page>
   );
 }
 
-ProjectDetails.propTypes = {
+CampaignDetails.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired
 };
 
-export default ProjectDetails;
+export default CampaignDetails;

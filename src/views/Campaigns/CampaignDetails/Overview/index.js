@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Overview({ project, className, ...rest }) {
+function Overview({ campaign, className, ...rest }) {
   const classes = useStyles();
 
   return (
@@ -34,8 +34,6 @@ function Overview({ project, className, ...rest }) {
         xl={9}
         xs={12}
       >
-        <Brief brief={project.brief} />
-        <Deliverables className={classes.deliverables} />
       </Grid>
       <Grid
         item
@@ -43,11 +41,6 @@ function Overview({ project, className, ...rest }) {
         xl={3}
         xs={12}
       >
-        <Holder project={project} />
-        <Members
-          className={classes.members}
-          members={project.members}
-        />
       </Grid>
     </Grid>
   );
@@ -55,7 +48,7 @@ function Overview({ project, className, ...rest }) {
 
 Overview.propTypes = {
   className: PropTypes.string,
-  project: PropTypes.object.isRequired
+  campaign: PropTypes.object.isRequired
 };
 
 export default Overview;

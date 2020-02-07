@@ -46,41 +46,33 @@ const useStyles = makeStyles((theme) => ({
 const initialValues = {
   client: 'WEL',
   location: '',
-  campaign: '',
+  campaign: '0',
   projectNumber: '',
   clientContact: ''
 };
 
-function ClientDetails({ onSubmit, className, ...rest }) {
+function ClientDetails({ project, onSubmit, className, ...rest }) {
   const classes = useStyles();
-  const [clients, setClients] = useState([]);
   const [clientContacts, setClientContacts] = useState([]);
   const [filteredClientContacts, setFilteredClientContacts] = useState([]);
-  const [facilities, setFacilities] = useState([]);
   const [filteredFacilities, setFilteredFacilities] = useState([]);
-  const [campaigns, setCampaigns] = useState([]);
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
-  const [values, setValues] = useState({ ...initialValues });
+  const [values, setValues] = useState({
+    client: project.client,
+    location: project.location,
+    campaign: project.campaign,
+    projectNumber: project.projectNumber,
+    clientContact: project.clientContact
+  });
 
   useEffect(() => {
     let mounted = true;
 
-    const fetchClients = () => {
-      axios.get('/clients').then((response) => {
-        if (mounted) {
-          setClients(response.data)
-        }
-      }).catch(error => {
-        console.log(error)
-      });
-    };
-
     const fetchFacilities = () => {
       axios.get('/clients/facilities').then((response) => {
         if (mounted) {
-          setFacilities(response.data);
           setFilteredFacilities(response.data.filter(function (facility) {
-            return values.client === facility.client
+            return project.client === facility.client
           }));
         }
       }).catch(error => {
@@ -93,7 +85,7 @@ function ClientDetails({ onSubmit, className, ...rest }) {
         if (mounted) {
           setClientContacts(response.data);
           setFilteredClientContacts(response.data.filter(function (contact) {
-            return values.client === contact.client && values.location === contact.location
+            return project.client === contact.client && values.location === contact.location
           }));
         }
       }).catch(error => {
@@ -104,9 +96,8 @@ function ClientDetails({ onSubmit, className, ...rest }) {
     const fetchCampaigns = () => {
       axios.get('/campaigns').then((response) => {
         if (mounted) {
-          setCampaigns(response.data);
           setFilteredCampaigns(response.data.filter(function (campaign) {
-            return values.client === campaign.client
+            return project.client === campaign.client
           }));
         }
       }).catch(error => {
@@ -114,10 +105,11 @@ function ClientDetails({ onSubmit, className, ...rest }) {
       });
     };
 
-    fetchClients();
     fetchFacilities();
     fetchClientContacts();
     fetchCampaigns();
+
+    onSubmit(values);
 
     return () => {
       mounted = false;
@@ -126,25 +118,10 @@ function ClientDetails({ onSubmit, className, ...rest }) {
 
   const handleFieldChange = (field, value) => {
 
-    if (field === 'client')
-    {
-      setFilteredFacilities(facilities.filter(function (facility) {
-        return value === facility.client
-      }));
-
-      setFilteredCampaigns(campaigns.filter(function (campaign) {
-        return value === campaign.client
-      }));
-
-      setFilteredClientContacts(clientContacts.filter(function (contact) {
-        return values.client === contact.client && value === contact.location
-      }));
-    }
-
     if (field === 'location')
     {
       setFilteredClientContacts(clientContacts.filter(function (contact) {
-        return values.client === contact.client && value === contact.location
+        return project.client === contact.client && value === contact.location
       }));
     }
 
@@ -181,27 +158,12 @@ function ClientDetails({ onSubmit, className, ...rest }) {
                 label="Client"
                 name="client"
                 required
-                InputLabelProps={{ shrink: !!values.client }}
-                select
+                disabled
                 margin="dense"
                 // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                onChange={(event) => handleFieldChange(
-                  'client',
-                  event.target.value
-                )}
-                value={values.client}
+                value={project.clientName}
                 variant="outlined"
-              >
-                {clients.map(option => (
-                  <option
-                    key={option.id}
-                    value={option.id}
-                  >
-                    {option.name}
-                  </option>
-                ))}
-              </TextField>
+              />
             </Grid>
             <Grid
               item
@@ -216,6 +178,7 @@ function ClientDetails({ onSubmit, className, ...rest }) {
                 margin="dense"
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
+                InputLabelProps={{ shrink: !!values.location }}
                 onChange={(event) => handleFieldChange(
                   'location',
                   event.target.value
@@ -304,7 +267,7 @@ function ClientDetails({ onSubmit, className, ...rest }) {
                 fullWidth
                 helperText=""
                 margin="dense"
-                label="Client Project Number"
+                label="Client Reference Number"
                 name="projectNumber"
                 value={values.projectNumber}
                 onChange={(event) => handleFieldChange(
@@ -323,7 +286,8 @@ function ClientDetails({ onSubmit, className, ...rest }) {
 
 ClientDetails.propTypes = {
   className: PropTypes.string,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  project: PropTypes.object.isRequired
 };
 
 export default ClientDetails;

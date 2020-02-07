@@ -85,13 +85,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const initialValues = {
-  projectStatus: '',
+  campaignStatus: '',
   amount: [0, 2000],
   client: '',
-  projectManager: '',
   facility: '',
-  campaign: '',
-  projectType: ''
+  template: ''
 };
 
 function Filter({
@@ -105,13 +103,10 @@ function Filter({
   const [expandProject, setExpandProject] = useState(true);
   const [values, setValues] = useState({ ...initialValues });
   const [clients, setClients] = useState([]);
-  const [projectManagers, setProjectManagers] = useState([]);
   const [facilities, setFacilities] = useState([]);
   const [filteredFacilties, setFilteredFacilities] = useState([]);
-  const [campaigns, setCampaigns] = useState([]);
-  const [filteredCampaigns, setFilteredCampaigns] = useState([]);
-  const [statuses, setStatuses] = useState([]);
-  const [types, setTypes] = useState([]);
+  const [templates, setTemplates] = useState([]);
+  const [filteredTemplates, setFilteredTemplates] = useState([]);
 
   useEffect(() => {
     let mounted = true;
@@ -136,40 +131,10 @@ function Filter({
       });
     };
 
-    const fetchProjectManagers = () => {
-      axios.get('/employees/projectManagers').then((response) => {
+    const fetchTemplates = () => {
+      axios.get('/campaigns/templates').then((response) => {
         if (mounted) {
-          setProjectManagers(response.data);
-        }
-      }).catch(error => {
-        console.log(error)
-      });
-    };
-
-    const fetchCampaigns = () => {
-      axios.get('/campaigns').then((response) => {
-        if (mounted) {
-          setCampaigns(response.data);
-        }
-      }).catch(error => {
-        console.log(error)
-      });
-    };
-
-    const fetchTypes = () => {
-      axios.get('/projects/types').then((response) => {
-        if (mounted) {
-          setTypes(response.data);
-        }
-      }).catch(error => {
-        console.log(error)
-      });
-    };
-
-    const fetchStatuses = () => {
-      axios.get('/projects/statuses').then((response) => {
-        if (mounted) {
-          setStatuses(response.data);
+          setTemplates(response.data);
         }
       }).catch(error => {
         console.log(error)
@@ -178,10 +143,7 @@ function Filter({
 
     fetchClients();
     fetchFacilities();
-    fetchProjectManagers();
-    fetchCampaigns();
-    fetchTypes();
-    fetchStatuses();
+    fetchTemplates();
 
     return () => {
       mounted = false;
@@ -209,8 +171,8 @@ function Filter({
       return facility.client === value;
     }));
 
-    setFilteredCampaigns(campaigns.filter(function(campaign) {
-      return campaign.client === value && campaign.facility.toLowerCase().includes(values.facility);
+    setFilteredTemplates(templates.filter(function(template) {
+      return template.client === value;
     }));
   }
 
@@ -218,10 +180,6 @@ function Filter({
     setValues((prevValues) => ({
       ...prevValues,
       'facility': value
-    }));
-
-    setFilteredCampaigns(campaigns.filter(function(campaign) {
-      return campaign.client === values.client && campaign.facility.toLowerCase().includes(value.toLowerCase());
     }));
   }
 
@@ -265,102 +223,12 @@ function Filter({
               className={classes.contentSectionHeader}
               onClick={handleToggleProject}
             >
-              <Typography variant="h5">Project</Typography>
+              <Typography variant="h5">Campaign</Typography>
               {expandProject ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </div>
             <Divider />
             <Collapse in={expandProject}>
               <div className={classes.contentSectionContent}>
-                <div className={classes.formGroup}>
-                  <TextField
-                    className={classes.field}
-                    fullWidth
-                    label="Project Status"
-                    margin="dense"
-                    name="projectStatus"
-                    onChange={(event) => handleFieldChange(
-                      event,
-                      'projectStatus',
-                      event.target.value
-                    )}
-                    value={values.projectStatus}
-                    select
-                    SelectProps={{ native: true }}
-                    variant="outlined"
-                  >
-                    <option
-                      value=""
-                    />
-                    {statuses.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.name}
-                      >
-                        {option.name}
-                      </option>
-                    ))}
-                  </TextField>
-                </div>
-                <div className={classes.formGroup}>
-                  <TextField
-                    className={classes.field}
-                    fullWidth
-                    label="Project Type"
-                    margin="dense"
-                    name="projectType"
-                    onChange={(event) => handleFieldChange(
-                      event,
-                      'projectType',
-                      event.target.value
-                    )}
-                    value={values.projectType}
-                    select
-                    SelectProps={{ native: true }}
-                    variant="outlined"
-                  >
-                    <option
-                      value=""
-                    />
-                    {types.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.id}
-                      >
-                        {option.name}
-                      </option>
-                    ))}
-                  </TextField>
-                </div>
-                <div className={classes.formGroup}>
-                  <TextField
-                    className={classes.field}
-                    fullWidth
-                    label="Project Manager"
-                    margin="dense"
-                    name="projectManager"
-                    onChange={(event) => handleFieldChange(
-                      event,
-                      'projectManager',
-                      event.target.value
-                    )}
-                    value={values.projectManager}
-                    select
-                    SelectProps={{ native: true }}
-                    variant="outlined"
-                  >
-                    <option
-                      value=""
-                    />
-                    {projectManagers.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.id}
-                      >
-                        {option.name}
-                      </option>
-                    ))}
-                  </TextField>
-                </div>
                 <div className={classes.formGroup}>
                   <TextField
                     className={classes.field}
@@ -422,23 +290,23 @@ function Filter({
                   <TextField
                     className={classes.field}
                     fullWidth
-                    label="Campaign"
+                    label="Campaign Template"
                     margin="dense"
-                    name="campaign"
+                    name="campaignTemplate"
                     onChange={(event) => handleFieldChange(
                       event,
-                      'campaign',
+                      'template',
                       event.target.value
                     )}
-                    value={values.campaign}
+                    value={values.template}
                     select
                     SelectProps={{ native: true }}
                     variant="outlined"
                   >
                     <option
-                      value=''
+                      value=""
                     />
-                    {filteredCampaigns.map((option) => (
+                    {filteredTemplates.map((option) => (
                       <option
                         key={option.id}
                         value={option.id}
@@ -454,7 +322,7 @@ function Filter({
                     gutterBottom
                     variant="overline"
                   >
-                    Project amount
+                    Campaign amount
                   </Typography>
                   <div className={classes.fieldGroup}>
                     <Typography

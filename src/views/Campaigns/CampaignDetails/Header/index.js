@@ -33,17 +33,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Header({ project, className, ...rest }) {
+function Header({ campaign, className, ...rest }) {
   const classes = useStyles();
-  const [openApplication, setOpenApplication] = useState(false);
-
-  const handleApplicationOpen = () => {
-    setOpenApplication(true);
-  };
-
-  const handleApplicationClose = () => {
-    setOpenApplication(false);
-  };
 
   return (
     <div
@@ -62,53 +53,24 @@ function Header({ project, className, ...rest }) {
             gutterBottom
             variant="overline"
           >
-            Browse projects
+            Campaign Details
           </Typography>
           <Typography
             component="h1"
             gutterBottom
             variant="h3"
           >
-            {project.title}
+            {campaign.name}
           </Typography>
-          <Label
-            className={classes.label}
-            color={colors.green[600]}
-            variant="outlined"
-          >
-            Active project
-          </Label>
-        </Grid>
-        <Grid item>
-          <Button
-            className={classes.shareButton}
-            variant="contained"
-          >
-            <ShareIcon className={classes.shareIcon} />
-            Share
-          </Button>
-          <Button
-            className={classes.applyButton}
-            onClick={handleApplicationOpen}
-            variant="contained"
-          >
-            Apply for a role
-          </Button>
         </Grid>
       </Grid>
-      <Application
-        author={project.author}
-        onApply={handleApplicationClose}
-        onClose={handleApplicationClose}
-        open={openApplication}
-      />
     </div>
   );
 }
 
 Header.propTypes = {
   className: PropTypes.string,
-  project: PropTypes.object.isRequired
+  campaign: PropTypes.object.isRequired
 };
 
 Header.defaultProps = {};
