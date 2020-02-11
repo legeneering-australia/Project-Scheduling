@@ -73,6 +73,21 @@ export default [
         component: lazy(() => import('src/views/Campaigns/CampaignDetails'))
       },
       {
+        path: '/campaigns/maintenance/templates',
+        exact: true,
+        component: lazy(() => import('src/views/Campaigns/Maintenance/Templates/ManagementList'))
+      },
+      {
+        path: '/campaigns/maintenance/templates/create',
+        exact: true,
+        component: lazy(() => import('src/views/Campaigns/Maintenance/Templates/Create'))
+      },
+      {
+        path: '/campaigns/maintenance/templates/details/:id/:tab',
+        exact: true,
+        component: lazy(() => import('src/views/Campaigns/Maintenance/Templates/Details'))
+      },
+      {
         path: '/campaigns/overview',
         exact: true,
         component: OverviewView

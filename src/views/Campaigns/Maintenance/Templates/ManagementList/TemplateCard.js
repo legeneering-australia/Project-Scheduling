@@ -61,11 +61,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function CampaignCard({ campaign, className, ...rest }) {
+function TemplateCard({ template, className, ...rest }) {
   const classes = useStyles();
 
   const statusColors = {
-    'Negative': colors.red[600],
+    'In progress': colors.orange[600],
     Canceled: colors.grey[600],
     Completed: colors.green[600]
   };
@@ -82,18 +82,18 @@ function CampaignCard({ campaign, className, ...rest }) {
         >
           <Grid
             item
-            xs={2}
+            xs={4}
           >
             <Link
               color="textPrimary"
               component={RouterLink}
-              to={"/campaigns/details/"+campaign.id+"/overview"}
+              to={"/campaigns/maintenance/templates/details/"+template.id+"/overview"}
               variant="h5"
             >
-              {campaign.name}
+              {template.name}
             </Link>
             <Typography variant="body2">
-              {campaign.clientName}
+              {template.clientName}
             </Typography>
           </Grid>
           <Grid
@@ -101,55 +101,27 @@ function CampaignCard({ campaign, className, ...rest }) {
             xs={2}
           >
             <Typography variant="h6">
-              $
-              {campaign.value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+              {template.milestones}
             </Typography>
-            <Typography variant="body2">Campaign Value</Typography>
+            <Typography variant="body2">Milestones</Typography>
           </Grid>
           <Grid
             item
             xs={2}
           >
             <Typography variant="h6">
-              {moment(campaign.execDate).format('DD MMMM YYYY')}
+              {template.creator}
             </Typography>
-            <Typography variant="body2">Execution Date</Typography>
-          </Grid>
-          <Grid
-            item
-            xs={1}
-          >
-            <Typography variant="h6">
-              {campaign.currentPhase}
-            </Typography>
-            <Typography variant="body2">Current Phase</Typography>
+            <Typography variant="body2">Created By</Typography>
           </Grid>
           <Grid
             item
             xs={2}
           >
             <Typography variant="h6">
-              {campaign.upcomingMilestone}
+              {moment(template.createdDate).format('DD MMMM YYYY')}
             </Typography>
-            <Typography variant="body2">Upcoming Milestone</Typography>
-          </Grid>
-          <Grid
-            item
-            xs={2}
-          >
-            <Typography variant="h6">
-              {moment(campaign.dueDate).format('DD MMMM YYYY')}
-            </Typography>
-            <Typography variant="body2">Milestone Deadline</Typography>
-          </Grid>
-          <Grid
-            item
-            xs={1}
-          >
-            <Typography variant="h6">
-              {campaign.delta}
-            </Typography>
-          <Typography variant="body2">{campaign.delta > 0 ? 'Days Ahead' : 'Days Behind'}</Typography>
+            <Typography variant="body2">Created Date</Typography>
           </Grid>
         </Grid>
         <div className={classes.actions}>
@@ -158,7 +130,7 @@ function CampaignCard({ campaign, className, ...rest }) {
             size="small"
             variant="outlined"
             component={RouterLink}
-            to={"/campaigns/details/"+campaign.id+"/overview"}
+            to={"/campaigns/maintenance/templates/details/"+template.id+"/overview"}
           >
             View
           </Button>
@@ -168,9 +140,9 @@ function CampaignCard({ campaign, className, ...rest }) {
   );
 }
 
-CampaignCard.propTypes = {
+TemplateCard.propTypes = {
   className: PropTypes.string,
-  campaign: PropTypes.object.isRequired
+  template: PropTypes.object.isRequired
 };
 
-export default CampaignCard;
+export default TemplateCard;

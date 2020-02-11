@@ -64,7 +64,7 @@ function CampaignManagementList() {
   const handleSearch = e => {
     setSearchInput(e);
     setSearchedCampaigns(filteredCampaigns.filter(function(campaign) {
-      return campaign.name.toLowerCase().includes(searchInput.toLowerCase());
+      return campaign.name.toLowerCase().includes(e.toLowerCase());
     }));
   }
 
@@ -109,7 +109,7 @@ function CampaignManagementList() {
             gutterBottom
             variant="body2"
           >
-            {`${campaigns.length} Records found. Page ${page + 1} of ${Math.ceil(searchedCampaigns.length / rowsPerPage)}`}
+            {`${searchedCampaigns.length} Records found. Page ${page + 1} of ${Math.ceil(searchedCampaigns.length / rowsPerPage)}`}
           </Typography>
           {
           searchedCampaigns.slice((page * rowsPerPage), ((page * rowsPerPage) + rowsPerPage)).map((campaign) => (

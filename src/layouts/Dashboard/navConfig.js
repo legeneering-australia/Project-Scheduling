@@ -17,29 +17,10 @@ export default [
         icon: HomeIcon
       },
       {
-        title: 'Dashboards',
-        href: '/dashboards',
-        icon: DashboardIcon,
-        items: [
-          {
-            title: 'Default',
-            href: '/dashboards/default'
-          },
-          {
-            title: 'Analytics',
-            href: '/dashboards/analytics'
-          }
-        ]
-      },
-      {
         title: 'Campaigns',
         href: '/campaigns',
         icon: ListIcon,
         items: [
-          {
-            title: 'Overview',
-            href: '/campaigns/overview'
-          },
           {
             title: 'Browse',
             href: '/campaigns'
@@ -51,7 +32,7 @@ export default [
             items: [
               {
                 title: 'Campaign Templates',
-                href: '/campaings/maintenance/templates'
+                href: '/campaigns/maintenance/templates'
               }
             ]
           }
@@ -63,30 +44,10 @@ export default [
         icon: ListAltIcon,
         items: [
           {
-            title: 'Overview',
-            href: '/projects/overview'
-          },
-          {
             title: 'Browse',
             href: '/projects'
-          },
-          {
-            title: 'Maintenance',
-            href: '/projects/maintenance',
-            icon: SettingsIcon,
-            items: [
-              {
-                title: 'Project Types',
-                href: '/projects/maintenance/types'
-              }
-            ]
           }
         ]
-      },
-      {
-        title: 'Calendar',
-        href: '/calendar',
-        icon: CalendarTodayIcon,
       }
     ]
   }
